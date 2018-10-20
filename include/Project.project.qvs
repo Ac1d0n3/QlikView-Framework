@@ -1,0 +1,34 @@
+/****************************************************************
+* 	@Project:	ProjectFile
+*
+*	@Author:	Thomas Lindackers
+*	@Version:	1.1
+*	
+*	@last changes: 30.08.2017
+*	
+*****************************************************************/
+Trace Loading @ $(ProjectName) Vars;
+Trace ----------------------------------------------------------;
+
+let Author = 'Thomas Lindackers';
+let Version = '1.0';
+let InfoText = '';
+
+
+// Layout Helper Vars
+let popUp = '';
+let showHidden = 0;
+let showLayoutBG = 1;
+let searchMode = 1;
+let calendarMode='Real';
+
+// Vars for ColorPicker
+let colorFunc = 'rgb()';
+let channelR = '0';
+let channelG = '0';
+let channelB = '0';
+let channelA = '1';
+let channelH = '0';
+let channelS = '0';
+let channelL = '0';
+

@@ -1,0 +1,133 @@
+/****************************************************************
+* 	@Project:	MasterCalendar
+*
+*	@Author:	Thomas Lindackers
+*	@Version:	2.2
+*	
+*	@last changes: 30.08.2017
+*	
+*****************************************************************/
+Trace Building MasterCalendar @ $(ProjectName);
+Trace ----------------------------------------------------------;	
+	
+	/*
+		Getting Min an MaxDate and store to DB
+	*/ 
+	MinMax:
+	LOAD
+		Min($(DateFieldName)) as MinDate,
+		Max($(DateFieldName)) as MaxDate
+	RESIDENT $(DateTableName);
+	
+	
+	
+	LET tempMinDate = Num(Peek('MinDate', 0, 'MinMax')); 
+	LET tempMaxDate = Num(Peek('MaxDate', 0, 'MinMax')); 
+	LET vMinDate = $(tempMinDate);
+	LET vMaxDate = $(tempMaxDate);
+
+	DROP TABLE MinMax;
+	
+	/*
+		Adding Days to Calendar (before or after)
+	*/ 
+	IF mcShiftBefore <> '' and not isNull(mcShiftBefore) THEN 
+		LET vMinDate = $(tempMinDate) - $(mcShiftBefore);
+	ENDIF;
+	
+	IF mcShiftAfter <> '' and not isNull(mcShiftAfter) THEN
+		LET vMaxDate = $(tempMaxDate) + $(mcShiftAfter);	
+	ENDIF;
+	
+	Trace vMinDate = $(vMinDate);
+	Trace vMaxDate = $(vMaxDate);
+	
+	/* Different ways to set vToday see above */
+	IF lower(setTodayDateTo) = 'today' or setTodayDateTo = '' THEN
+		LET vToday = today();
+	ELSEIF lower(setTodayDateTo) = 'maxdate' THEN
+		LET vToday = $(vMaxDate);
+	ELSEIF lower(setTodayDateTo) = 'ownvalue' THEN
+		LET vToday = $(vTodayValue);
+	ENDIF;
+	
+	Trace vToday = $(vToday);
+	
+	IF FiscalShift = '' or isNull(FiscalShift)  THEN 
+		FiscalShift = 0; 
+	ENDIF
+	
+	IF CalendarName = '' or isNull(CalendarName) THEN
+		set CalendarName = 'MasterCalendar';
+	endIf
+	
+	
+	/* Generating Records */
+	TempCal:
+	LOAD date($(vMinDate) + rowno() - 1) AS TempDate 
+	AUTOGENERATE $(vMaxDate) - $(vMinDate) + 1; 
+	
+	/*
+		Generate Values from Temp and link to model
+	*/
+	$(CalendarName):
+	LOAD
+		*,
+		$(calPrefix)Year$(calSubfix) & '-' & $(calPrefix)Quarter$(calSubfix) as $(calPrefix)YearQtr$(calSubfix)
+		// Create Fiscal Values this will be removed in case of createFiscal = false
+		, $(calPrefix)FiscalQuarter$(calSubfix) & '-' & $(calPrefix)FiscalYear$(calSubfix) as $(calPrefix)FiscalQtrYear$(calSubfix)
+		, $(calPrefix)Month$(calSubfix) & '-' & $(calPrefix)FiscalYear$(calSubfix) as FiscalMonthYear$(calSubfix)
+		, if($(calPrefix)FiscalYear$(calSubfix) = Year($(vToday))-1, 1, 0)  as $(calPrefix)FiscalCurYTDFlag$(calSubfix)
+		, if($(calPrefix)FiscalYear$(calSubfix) = Year($(vToday))-2, 1, 0) as $(calPrefix)FiscalLastYTDFlag$(calSubfix)
+	;
+	LOAD	
+		TempDate AS $(DateFieldName)
+		
+		, Year(TempDate) AS $(calPrefix)Year$(calSubfix)
+		, Month(TempDate) AS $(calPrefix)Month$(calSubfix)
+		, Day(TempDate) AS $(calPrefix)Day$(calSubfix)
+		
+		, Week(TempDate) AS $(calPrefix)Week$(calSubfix)
+		, Weekday(TempDate) AS $(calPrefix)WeekDay$(calSubfix)
+		
+		, 'Q' & ceil(month(TempDate) / 3) AS $(calPrefix)Quarter$(calSubfix)
+		
+		, Date(monthstart(TempDate), 'MMM-YYYY') AS $(calPrefix)MonthYear$(calSubfix)
+		, Year(TempDate) &'-'& Week(TempDate) AS $(calPrefix)YearWeek$(calSubfix)
+		
+		/* Use this Flag in Expressions to get the Current Year and Last Year Amounts */
+		, inyeartodate(TempDate, $(vToday), 0) * -1 AS $(calPrefix)CurYTDFlag$(calSubfix)
+		, inyeartodate(TempDate, $(vToday), -1) * -1 AS $(calPrefix)LastYTDFlag$(calSubfix)
+		 
+		// Create Fiscal Values this will be removed in case of createFiscal = false
+		, Year(YearStart ( TempDate, 0 ,$(FiscalShift))) As $(calPrefix)FiscalYear$(calSubfix)
+		, 'Q' & Ceil( Month(MonthStart ( TempDate, -$(FiscalShift))) / 3) as $(calPrefix)FiscalQuarter$(calSubfix)
+		
+		
+	RESIDENT TempCal 
+	ORDER BY TempDate ASC;
+
+	Drop Table TempCal;
+	
+	IF createFiscal = 'false' OR isNull(createFiscal) THEN
+		Drop Fields 
+			  $(calPrefix)FiscalYear$(calSubfix)
+			, $(calPrefix)FiscalQuarter$(calSubfix)
+			, $(calPrefix)FiscalQtrYear$(calSubfix)
+			, $(calPrefix)FiscalMonthYear$(calSubfix)
+			, $(calPrefix)FiscalCurYTDFlag$(calSubfix)
+			, $(calPrefix)FiscalLastYTDFlag$(calSubfix)
+		;
+	ENDIF
+	
+	IF dropRealFields = 'true' and not isNull(dropRealFields) THEN
+		Drop Fields 
+			  $(calPrefix)Year$(calSubfix)
+			, $(calPrefix)YearWeek$(calSubfix)
+			, $(calPrefix)MonthYear$(calSubfix)
+			, $(calPrefix)CurYTDFlag$(calSubfix)
+			, $(calPrefix)LastYTDFlag$(calSubfix)
+		;
+	ENDIF
+
+	

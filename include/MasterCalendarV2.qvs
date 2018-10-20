@@ -1,0 +1,80 @@
+/****************************************************************
+* 	@Project:	MasterCalendar
+*
+*	@Author:	Thomas Lindackers
+*	@Version:	2.2
+*
+*	@last changes: 30.08.2017
+*
+*****************************************************************/
+Trace Building MasterCalendar @ $(ProjectName);
+Trace ----------------------------------------------------------;
+
+
+	/*
+		Getting Min an MaxDate and store to DB
+	*/
+
+	IF FiscalShift = '' or isNull(FiscalShift)  THEN
+		FiscalShift = 0;
+
+	ENDIF
+
+	IF CalendarName = '' or isNull(CalendarName) THEN
+		set CalendarName = 'MasterCalendar';
+	endIf
+
+	$(CalendarName):
+	LOAD
+		*,
+		$(calPrefix)Year$(calSubfix) & '-' & $(calPrefix)Quarter$(calSubfix) as $(calPrefix)YearQtr$(calSubfix)
+		// Create Fiscal Values this will be removed in case of createFiscal = false
+		, $(calPrefix)FiscalQuarter$(calSubfix) & '-' & $(calPrefix)FiscalYear$(calSubfix) as $(calPrefix)FiscalQtrYear$(calSubfix)
+		, $(calPrefix)Month$(calSubfix) & '-' & $(calPrefix)FiscalYear$(calSubfix) as FiscalMonthYear$(calSubfix)
+	;
+	LOAD
+		TempDate AS $(DateFieldName)
+
+		, Year(TempDate) AS $(calPrefix)Year$(calSubfix)
+		, Month(TempDate) AS $(calPrefix)Month$(calSubfix)
+		, Day(TempDate) AS $(calPrefix)Day$(calSubfix)
+
+		, Week(TempDate) AS $(calPrefix)Week$(calSubfix)
+		, Weekday(TempDate) AS $(calPrefix)WeekDay$(calSubfix)
+
+		, 'Q' & ceil(month(TempDate) / 3) AS $(calPrefix)Quarter$(calSubfix)
+
+		, Date(monthstart(TempDate), 'MMM-YYYY') AS $(calPrefix)MonthYear$(calSubfix)
+		, Year(TempDate) &'-'& Week(TempDate) AS $(calPrefix)YearWeek$(calSubfix)
+
+		// Create Fiscal Values this will be removed in case of createFiscal = false
+		, Year(YearStart ( TempDate, 0 ,$(FiscalShift))) As $(calPrefix)FiscalYear$(calSubfix)
+		, 'Q' & Ceil( Month(MonthStart ( TempDate, -$(FiscalShift))) / 3) as $(calPrefix)FiscalQuarter$(calSubfix)
+	;
+
+	LOAD
+	 date(mindate + IterNo()) AS TempDate
+	 ,maxdate // Used in InYearToDate() above, but not kept
+	WHILE mindate + IterNo() <= maxdate;
+
+	LOAD
+		min(FieldValue('$(DateFieldName)', recno()))-1 as mindate,
+		max(FieldValue('$(DateFieldName)', recno())) as maxdate
+	AUTOGENERATE FieldValueCount('$(DateFieldName)');
+
+	IF createFiscal = 'false' OR isNull(createFiscal) THEN
+		Drop Fields
+			  $(calPrefix)FiscalYear$(calSubfix)
+			, $(calPrefix)FiscalQuarter$(calSubfix)
+			, $(calPrefix)FiscalQtrYear$(calSubfix)
+			, $(calPrefix)FiscalMonthYear$(calSubfix)
+		;
+	ENDIF
+
+	IF dropRealFields = 'true' and not isNull(dropRealFields) THEN
+		Drop Fields
+			  $(calPrefix)Year$(calSubfix)
+			, $(calPrefix)YearWeek$(calSubfix)
+			, $(calPrefix)MonthYear$(calSubfix)
+		;
+	ENDIF

@@ -1,0 +1,49 @@
+/****************************************************************
+* 	@Project:	RenameFields
+*
+*	@Author:	Thomas Lindackers
+*	@Version:	1.1
+*	
+*	@last changes: 30.08.2017
+*	
+*****************************************************************/
+Trace Renameing Fields ($(RenameType))  @ $(ProjectName);
+Trace ----------------------------------------------------------;
+if(isNull(FrameworkFile) then
+	Set FrameworkFile = Framework.xlsx;
+EndIf;
+if lower(RenameType) = 'aliase' then
+	Trace unbind fieldnamse using Aliase;
+	Aliase:
+	Mapping LOAD 
+		Field, Alias
+	FROM
+	[$(incPath)$(FrameworkFile)]
+	(ooxml, embedded labels, table is [Aliase]);
+	Rename Field using Aliase;
+elseif lower(RenameType) = 'translate' then
+	Trace Renameing Fields Language $(FieldLanguage); 
+	Translation:
+	Mapping LOAD Field, $(FieldLanguage)
+	FROM [$(incPath)$(FrameworkFile)]
+	(ooxml, embedded labels, table is [FieldNames]);
+	Rename Fields using Translation;
+
+	
+elseif lower(RenameType) = 'fromto' then
+	Trace Renameing Fields Language $(FieldLanguage); 
+	Translation:
+	Mapping LOAD $(RenameFrom), $(RenameTo)
+	FROM [$(incPath)$(FrameworkFile)]
+	(ooxml, embedded labels, table is [FieldNames]);
+	Rename Fields using Translation;
+	
+endif;
+
+if lower(TagFields) = 'true' THEN
+	Tags:
+	Mapping LOAD $(FieldLanguage), Tag
+	FROM [$(incPath)$(FrameworkFile)]
+	(ooxml, embedded labels, table is [FieldNames]);
+	Tag Fields using Tags;
+endif;

@@ -1,0 +1,55 @@
+/****************************************************************
+* 	@Project:	Delete Vars for used in Script only
+*
+*	@Author:	Thomas Lindackers
+*	@Version:	1.1
+*	
+*	@last changes: 30.08.2017
+*	
+*****************************************************************/
+Trace Reset Vars @ $(ProjectName);
+Trace ----------------------------------------------------------;
+// Delete Vars
+set ConnStr 			=;
+set DataSourcePath 		=;
+set i 					=;
+set incPath 			=;
+set MainVarsDefinition 	=;
+set FieldLanguage 		=; 
+set BIGovWhereTables 	=;			
+set DataSourcePath 		=;
+set exportDestination 	=; 			
+set exportType 			=;
+set EmployeeWhere 		=;
+set vCount				=;
+set vTableName 			=;
+set RenameType			=;
+set DateFieldName 		= ;
+set DateTableName 		= ;
+set setTodayDateTo 		= ;
+set vTodayValue 		= ;
+set mcShiftBefore 		= ;
+set mcShiftAfter 		= ;
+set createFiscal 		= ; 
+set FiscalShift 		= ;
+set vToday 				= ;
+set tempMinDate 		= ;
+set tempMaxDate 		= ;
+set vMinDate 			= ;
+set vMaxDate 			= ;
+set dropTables			= ;
+set dropRealFields		= ;
+set FactWhere 			= ;
+set BIWhere				= ;
+set TagFields			= ;
+set CalendarName		= ;
+set calSubfix			= ;
+set calPrefix			= ;
+set vVar 				= ;
+set vVal				= ;
+set vVarGen 			= ;
+set vValGen				= ;
+set k					= ;
+set bDesc				= ;
+
+	

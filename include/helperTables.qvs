@@ -1,0 +1,27 @@
+/****************************************************************
+* 	@Project:	HelperTables
+*
+*	@Author:	Thomas Lindackers
+*	@Version:	1.1
+*	
+*	@last changes: 30.08.2017
+*	
+*****************************************************************/
+Trace Loading HelperTables @ $(ProjectName);
+Trace ----------------------------------------------------------;
+
+If MainVarsDefinition = 'DE' Or MainVarsDefinition = '' Then
+	dualBoolen:
+	Mapping LOAD * INLINE [
+		Number, Text
+		0, Falsch
+		1, Wahr
+	];
+ElseIf MainVarsDefinition = 'US' THEN
+	dualBoolen:
+	Mapping LOAD * INLINE [
+		Number, Text
+		0, False
+		1, True
+	];
+EndIf;

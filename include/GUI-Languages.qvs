@@ -1,0 +1,32 @@
+/****************************************************************
+* 	@Project:	HelperTables
+*
+*	@Author:	Thomas Lindackers
+*	@Version:	1.1
+*	
+*	@last changes: 30.08.2017
+*	
+*****************************************************************/
+Trace Loading GUI-Languages ($(RenameType))  @ $(ProjectName);
+Trace ----------------------------------------------------------;
+
+if(isNull(FrameworkFile) then
+	Set FrameworkFile = Framework.xlsx;
+EndIf;
+
+Dictionary:
+LOAD 
+ *
+FROM
+[$(incPath)$(FrameworkFile)]
+(ooxml, embedded labels, table is [GUI-Lang]);
+
+
+for i=2 to  NoOfFields('Dictionary')
+LanguageSelector:
+load
+	FieldName ($(i), 'Dictionary') as %Language
+autogenerate 1;
+next
+
+set appLanguage = '=Minstring(%Language)';
