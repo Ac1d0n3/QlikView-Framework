@@ -1,0 +1,89 @@
+/****************************************************************
+* 	@Project:	ColorSheme
+*
+*	@Author:	Thomas Lindackers
+*	@Version:	1.1
+*	
+*	@last changes: 30.08.2017
+*	
+*****************************************************************/
+Trace Loading ColorSheme @ $(ProjectName);
+Trace ----------------------------------------------------------;
+
+/*
+	You can modify used Colors for the App here
+*/
+
+// Highlighting Colors
+Let colorPositiv = '=RGB(0,200,0)';
+Let colorNegativ = '=RGB(200,0,0)';
+Let colorNeutral = '=RGB(60,60,60)';
+
+// Scrollbars
+let colorScrollBar = 'RGB(120,120,120)';
+let colorScrollBarArrows = 'RGB(120,120,120)';
+
+// TitleBars (Listboxes etc.)
+Let colorTitleActiveBG = '=rgb(122, 184, 14)';
+Let colorTitleActiveFont = '=RGB(255,255,255)';
+Let colorTitleInActiveBG = '=RGB(255,255,255)';
+Let colorTitleInActiveFont = '=RGB(10,10,10)';
+Let colorBorder = '=RGB(120,120,120)';
+
+// TitleBars Charts
+Let colorChartTitleActiveBG = '=RGB(10,10,10)';
+Let colorChartTitleActiveFont = '=RGB(255,255,255)';
+Let colorChartTitleInActiveBG = '=RGB(255,255,255)';
+Let colorChartTitleInActiveFont = '=RGB(10,10,10)';
+Let colorChartBorder = '=RGB(120,120,120)';
+
+Let colorTextBoxBG = '=RGB(255,255,255)';
+let colorTextBoxFont = '=RGB(10,10,10)';
+
+// Tabrow & Tabs
+Let colorTabRow = '=rgb(120, 120, 120)';
+Let colorTabBG = '=rgb(122, 184, 14)';
+Let colorTabFont = '=RGB(255,255,255)';
+
+// Sheet Background
+Let colorSheetBG1 = '=RGB(250,250,250)';
+let colorSheetBG2 = '=RGB(250,250,250)';
+
+// Layout Objetcs
+let colorBorderLayoutBG = '=rgb(97, 97, 97)';
+let colorLayoutBG = '=RGB(255,255,255)';
+let colorContainerTab ='=rgb(122, 184, 14)';
+let colorLine = '=rgb(160, 160, 160)';
+
+// Icons and Buttons
+let colorIconHighlight = '=rgb(122, 184, 14)';
+let colorIcon = '=rgb(97, 97, 97)';
+// Color Codes used in Layout
+let colorCodeIcon = '=if(Not IsNUll(GetCurrentSelections()),colorIconHighlight,colorIcon)';
+let colorCodeButton = 'if($1=$2,colorIconHighlight,RGB(255,255,255))';
+let colorCodeButtonFont = 'if($1=$2,RGB(255,255,255),RGB(0,0,0))';
+
+
+// ChartColors
+/*
+let colorChart1 = '=rgb(97, 97, 97)';
+let colorChart2 = '=rgb(97, 97, 97)';
+let colorChart3 = '=rgb(97, 97, 97)';
+let colorChart4 = '=rgb(97, 97, 97)';
+let colorChart5 = '=rgb(97, 97, 97)';
+let colorChart6 = '=rgb(97, 97, 97)';
+let colorChart7 = '=rgb(97, 97, 97)';
+let colorChart8 = '=rgb(97, 97, 97)';
+let colorChart9 = '=rgb(97, 97, 97)';
+let colorChart10 = '=rgb(97, 97, 97)';
+let colorChart11 = '=rgb(97, 97, 97)';
+let colorChart12 = '=rgb(97, 97, 97)';
+let colorChart13 = '=rgb(97, 97, 97)';
+let colorChart14 = '=rgb(97, 97, 97)';
+let colorChart15 = '=rgb(97, 97, 97)';
+let colorChart16 = '=rgb(97, 97, 97)';
+let colorChart17 = '=rgb(97, 97, 97)';
+let colorChart18 = '=rgb(97, 97, 97)';
+let colorChartOther = '=rgb(97, 97, 97)';
+let colorChartTotal = '=rgb(97, 97, 97)';
+*/
